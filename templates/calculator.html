@@ -3,101 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Calculator</title>
+    <title>Modern Flask Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .calculator {
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #4CAF50;
+        
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        button:hover {
-            background-color: #45a049;
+        
+        .calculator-container {
+            flex: 1;
+            padding: 2rem 0;
         }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9f7ef;
-            border-radius: 4px;
+        
+        .calculator-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .calculator-header {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            padding: 1.5rem;
             text-align: center;
         }
-        .error {
-            background-color: #ffebee;
-            color: #c62828;
+        
+        .calculator-body {
+            padding: 2rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.25);
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+        }
+        
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .result-success {
+            background-color: #e7f5ff;
+            color: #0c63e4;
+            border-left: 5px solid #0c63e4;
+        }
+        
+        .result-error {
+            background-color: #fff5f5;
+            color: #e53e3e;
+            border-left: 5px solid #e53e3e;
+        }
+        
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+        
+        .social-icons a {
+            color: white;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-3px);
+        }
+        
+        .operation-icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>Flask Calculator</h1>
-    <div class="calculator">
-        <form method="POST">
-            <div class="form-group">
-                <label for="num1">First Number:</label>
-                <input type="text" id="num1" name="num1" required>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1><i class="fas fa-calculator me-3"></i>Modern Calculator</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">A powerful calculator for your daily needs</p>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="operation">Operation:</label>
-                <select id="operation" name="operation">
-                    <option value="add">Addition (+)</option>
-                    <option value="subtract">Subtraction (-)</option>
-                    <option value="multiply">Multiplication (×)</option>
-                    <option value="divide">Division (÷)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="num2">Second Number:</label>
-                <input type="text" id="num2" name="num2" required>
-            </div>
-            
-            <button type="submit">Calculate</button>
-        </form>
-        
-        {% if error %}
-        <div class="result error">
-            <p>{{ error }}</p>
         </div>
-        {% elif result is not none %}
-        <div class="result">
-            <p>Result: {{ result }}</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="calculator-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="calculator-card">
+                        <div class="calculator-header">
+                            <h2><i class="fas fa-square-root-variable me-2"></i>Calculator</h2>
+                            <p class="mb-0">Perform basic arithmetic operations</p>
+                        </div>
+                        <div class="calculator-body">
+                            <form method="POST">
+                                <div class="mb-4">
+                                    <label for="num1" class="form-label fw-bold">
+                                        <i class="fas fa-1 me-2"></i>First Number
+                                    </label>
+                                    <input type="text" class="form-control" id="num1" name="num1" placeholder="Enter first number" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="operation" class="form-label fw-bold">
+                                        <i class="fas fa-code-branch me-2"></i>Operation
+                                    </label>
+                                    <select class="form-select" id="operation" name="operation">
+                                        <option value="add"><i class="operation-icon fas fa-plus"></i>Addition (+)</option>
+                                        <option value="subtract"><i class="operation-icon fas fa-minus"></i>Subtraction (-)</option>
+                                        <option value="multiply"><i class="operation-icon fas fa-times"></i>Multiplication (×)</option>
+                                        <option value="divide"><i class="operation-icon fas fa-divide"></i>Division (÷)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="num2" class="form-label fw-bold">
+                                        <i class="fas fa-2 me-2"></i>Second Number
+                                    </label>
+                                    <input type="text" class="form-control" id="num2" name="num2" placeholder="Enter second number" required>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-calculate w-100">
+                                    <i class="fas fa-equals me-2"></i>Calculate
+                                </button>
+                            </form>
+                            
+                            {% if error %}
+                            <div class="result-box result-error">
+                                <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+                            </div>
+                            {% elif result is not none %}
+                            <div class="result-box result-success">
+                                <i class="fas fa-check-circle me-2"></i>Result: {{ result }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>About This Calculator</h5>
+                    <p>A modern Flask-powered calculator application with a beautiful user interface.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <p class="mb-0">© 2025 Modern Calculator. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight the operation icons based on selection
+            const operationSelect = document.getElementById('operation');
+            operationSelect.addEventListener('change', function() {
+                const selectedOperation = this.value;
+                
+                // Add visual feedback when changing operations
+                const calculatorCard = document.querySelector('.calculator-card');
+                calculatorCard.classList.add('pulse');
+                
+                setTimeout(() => {
+                    calculatorCard.classList.remove('pulse');
+                }, 300);
+            });
+            
+            // Add animation to the calculate button
+            const calculateBtn = document.querySelector('.btn-calculate');
+            calculateBtn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            calculateBtn.addEventListener('mouseup', function() {
+                this.style.transform = '';
+            });
+            
+            // Add input validation
+            const numInputs = document.querySelectorAll('input[type="text"]');
+            numInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const value = this.value;
+                    if (value !== '' && isNaN(value)) {
+                        this.classList.add('is-invalid');
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
