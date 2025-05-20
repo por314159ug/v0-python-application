@@ -30,4 +30,4 @@ def calculator():
     return render_template('calculator.html', result=result, error=error)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
